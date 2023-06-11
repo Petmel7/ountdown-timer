@@ -1,60 +1,34 @@
-class CountdownTimer {
-  constructor({ selector, targetDate }) {
-    this.timerRef = document.querySelector(selector);
-    this.daysRef = this.timerRef.querySelector('[data-value="days"]');
-    this.hoursRef = this.timerRef.querySelector('[data-value="hours"]');
-    this.minsRef = this.timerRef.querySelector('[data-value="mins"]');
-    this.secsRef = this.timerRef.querySelector('[data-value="secs"]');
-    this.targetDate = targetDate;
 
-    this.start();
-  }
+// Отримуємо посилання на елементи таймера
+const timerContainer = document.getElementById('timer-1');
+const daysElement = timerContainer.querySelector('[data-value="days"]');
+const hoursElement = timerContainer.querySelector('[data-value="hours"]');
+const minsElement = timerContainer.querySelector('[data-value="mins"]');
+const secsElement = timerContainer.querySelector('[data-value="secs"]');
 
-  start() {
-    this.updateTimer();
+// Задаємо початкову дату та час, до якого відлік буде проводитись
+const targetDate = new Date('2023-06-31T23:59:59');
 
-    this.intervalId = setInterval(() => {
-      this.updateTimer();
-    }, 1000);
-  }
+// Функція, яка оновлює значення таймера
+function updateTimer() {
+  // Отримуємо поточну дату та час
+  const currentDate = new Date();
 
-  updateTimer() {
-    const time = this.targetDate - Date.now();
+  // Визначаємо різницю між поточною датою та цільовою датою
+  const timeDiff = targetDate - currentDate;
 
-    if (time <= 0) {
-      this.stop();
-      return;
-    }
+  // Переводимо різницю в мілісекунди в дні, години, хвилини та секунди
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-    const hours = this.pad(
-      Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    );
-    const mins = this.pad(
-      Math.floor((time % (1000 * 60 * 60)) / (1000 * 60))
-    );
-    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
-
-    this.updateUI(days, hours, mins, secs);
-  }
-
-  updateUI(days, hours, mins, secs) {
-    this.daysRef.textContent = days;
-    this.hoursRef.textContent = hours;
-    this.minsRef.textContent = mins;
-    this.secsRef.textContent = secs;
-  }
-
-  pad(value) {
-    return String(value).padStart(2, '0');
-  }
-
-  stop() {
-    clearInterval(this.intervalId);
-  }
+  // Оновлюємо значення елементів таймера
+  daysElement.textContent = days;
+  hoursElement.textContent = hours;
+  minsElement.textContent = mins;
+  secsElement.textContent = secs;
 }
 
-new CountdownTimer({
-  selector: '#timer-1',
-  targetDate: new Date('Jul 17, 2019'),
-});
+// Оновлюємо таймер кожну секунду
+setInterval(updateTimer, 1000);
