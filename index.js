@@ -1,4 +1,3 @@
-
 // Отримуємо посилання на елементи таймера
 const timerContainer = document.getElementById('timer-1');
 const daysElement = timerContainer.querySelector('[data-value="days"]');
